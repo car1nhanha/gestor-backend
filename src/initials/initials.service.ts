@@ -11,7 +11,7 @@ const repeatKey = (array = []) => {
   }, {});
 
   const arrayCountArray = Object.keys(arayCount).map((key) => {
-    return { state: key, count: arayCount[key] };
+    return { key, count: arayCount[key] };
   });
 
   return arrayCountArray;
