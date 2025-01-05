@@ -1,0 +1,234 @@
+openapi: 3.0.0
+info:
+  title: Volunteer Management API
+  description: API for managing volunteers, organizations, and projects
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api
+
+paths:
+  /volunteers:
+    get:
+      summary: List all volunteers
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number for pagination
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of items per page
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/VolunteerList'
+    post:
+      summary: Create a new volunteer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VolunteerInput'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/Volunteer'
+
+  /volunteers/{id}:
+    get:
+      summary: Get a volunteer by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/Volunteer'
+        '404':
+          description: Volunteer not found
+    put:
+      summary: Update a volunteer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VolunteerInput'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/Volunteer'
+        '404':
+          description: Volunteer not found
+    delete:
+      summary: Delete a volunteer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Volunteer deleted successfully
+        '404':
+          description: Volunteer not found
+
+  /auth/login:
+    post:
+      summary: Login for admin users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Authentication failed
+
+  /auth/register:
+    post:
+      summary: Register a new admin user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - location
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                location:
+                  type: object
+                  properties:
+                    lat:
+                      type: number
+                    lng:
+                      type: number
+      responses:
+        '201':
+          description: Admin registered successfully
+        '400':
+          description: Error registering admin
+
+# Similar paths for organizations and projects...
+
+components:
+  schemas:
+    Volunteer:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        location:
+          type: object
+          properties:
+            lat:
+              type: number
+            lng:
+              type: number
+        role:
+          type: string
+          enum: [volunteer, admin]
+        password:
+          type: string
+          description: Only required for admin users
+        created_at:
+          type: string
+          format: date-time
+
+    VolunteerInput:
+      type: object
+      required:
+        - name
+        - email
+        - location
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        location:
+          type: object
+          properties:
+            lat:
+              type: number
+            lng:
+              type: number
+        role:
+          type: string
+          enum: [volunteer, admin]
+
+    VolunteerList:
+      type: object
+      properties:
+        volunteers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Volunteer'
+        currentPage:
+          type: integer
+        totalPages:
+          type: integer
+        totalItems:
+          type: integer
+
+# Similar schemas for Organization and Project...
+
