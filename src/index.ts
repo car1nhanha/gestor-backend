@@ -20,6 +20,7 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.error("MongoDB connection error:", error));
 
+app.get("/", (req, res) => res.send("Hello World"));
 app.use("/api/auth", authRoutes);
 app.use("/api/volunteers", volunteerRoutes);
 app.use("/api/organizations", organizationRoutes);
