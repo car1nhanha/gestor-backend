@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Volunteer, { IVolunteerModel } from "../models/volunteer";
 import { buscarGeolocalizacao } from "../services/cep";
+import { sendEmail } from "../services/mail";
 
 export const createVolunteer = async (req: Request, res: Response) => {
   try {
@@ -96,7 +97,16 @@ export const getLocations = async (req: Request, res: Response) => {
 export const invite = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    // vou enviar o email
+    const date = {
+      email: "destinatario@exemplo.com",
+      subject: "Bem-vindo!",
+      template: "welcome",
+      replacements: {
+        name: "Lucas",
+        message: "Estamos felizes em tê-lo conosco!",
+      },
+    };
+    await sendEmail(date.email, date.subject, date.template, date.replacements);
     res.json({ message: `Volunteer invited: ${email}` });
   } catch (error) {
     res.status(500).json({ message: "Error inviting volunteer", error });
