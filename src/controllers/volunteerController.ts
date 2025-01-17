@@ -98,12 +98,13 @@ export const invite = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
     const date = {
-      email: "destinatario@exemplo.com",
+      email: email,
       subject: "Bem-vindo!",
       template: "welcome",
       replacements: {
-        name: "Lucas",
-        message: "Estamos felizes em tê-lo conosco!",
+        name: email.split("@")[0],
+        inviter: "Alguém",
+        registration_link: `${process.env.APP_URL}/self-register`,
       },
     };
     await sendEmail(date.email, date.subject, date.template, date.replacements);
