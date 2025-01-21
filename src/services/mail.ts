@@ -37,15 +37,22 @@ export const sendEmail = async (
     const htmlContent = await loadTemplate(templateName, replacements);
 
     const mailOptions = {
-      from: "edna30@ethereal.email",
+      from: "adm@gestordopovo.com",
       to,
       subject,
       html: htmlContent,
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log("E-mail enviado: %s", info.messageId);
-    return info;
+    return await transporter
+      .sendMail(mailOptions)
+      .then((info) => {
+        console.log(info);
+        return info;
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar e-mail:", error);
+        throw error;
+      });
   } catch (error) {
     console.error("Erro ao enviar e-mail:", error);
     throw error;
