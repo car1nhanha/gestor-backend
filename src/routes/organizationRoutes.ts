@@ -1,19 +1,19 @@
-import express from 'express';
+import express from "express";
+import { verifyToken } from "../controllers/authController";
 import {
   createOrganization,
-  getOrganizations,
-  getOrganizationById,
-  updateOrganization,
   deleteOrganization,
-} from '../controllers/organizationController';
+  getOrganizationById,
+  getOrganizations,
+  updateOrganization,
+} from "../controllers/organizationController";
 
 const router = express.Router();
 
-router.post('/', createOrganization);
-router.get('/', getOrganizations);
-router.get('/:id', getOrganizationById);
-router.put('/:id', updateOrganization);
-router.delete('/:id', deleteOrganization);
+router.post("/", verifyToken, createOrganization);
+router.get("/", getOrganizations);
+router.get("/:id", getOrganizationById);
+router.put("/:id", verifyToken, updateOrganization);
+router.delete("/:id", verifyToken, deleteOrganization);
 
 export default router;
-

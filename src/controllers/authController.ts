@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import Volunteer from "../models/volunteer";
 
@@ -50,5 +50,26 @@ export const register = async (req: Request, res: Response) => {
     res.status(201).json({ message: "Admin registered successfully" });
   } catch (error) {
     res.status(400).json({ message: "Error registering admin", error });
+  }
+};
+
+export const verifyToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.body.auth = decoded;
+    console.log({ decoded });
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
   }
 };

@@ -1,19 +1,19 @@
-import express from 'express';
+import express from "express";
+import { verifyToken } from "../controllers/authController";
 import {
   createProject,
-  getProjects,
-  getProjectById,
-  updateProject,
   deleteProject,
-} from '../controllers/projectController';
+  getProjectById,
+  getProjects,
+  updateProject,
+} from "../controllers/projectController";
 
 const router = express.Router();
 
-router.post('/', createProject);
-router.get('/', getProjects);
-router.get('/:id', getProjectById);
-router.put('/:id', updateProject);
-router.delete('/:id', deleteProject);
+router.post("/", verifyToken, createProject);
+router.get("/", getProjects);
+router.get("/:id", getProjectById);
+router.put("/:id", verifyToken, updateProject);
+router.delete("/:id", verifyToken, deleteProject);
 
 export default router;
-

@@ -1,4 +1,5 @@
 import express from "express";
+import { verifyToken } from "../controllers/authController";
 import {
   createVolunteer,
   deleteVolunteer,
@@ -16,12 +17,12 @@ const showLog = (req: any, res: any, next: any) => {
   next();
 };
 
-router.post("/", showLog, createVolunteer);
+router.post("/", showLog, verifyToken, createVolunteer);
 router.get("/", showLog, getVolunteers);
 router.get("/:id", showLog, getVolunteerById);
-router.put("/:id", showLog, updateVolunteer);
-router.delete("/:id", showLog, deleteVolunteer);
+router.put("/:id", showLog, verifyToken, updateVolunteer);
+router.delete("/:id", showLog, verifyToken, deleteVolunteer);
 router.get("/get/location", showLog, getLocations);
-router.post("/invite/email", showLog, invite);
+router.post("/invite/email", showLog, verifyToken, invite);
 
 export default router;
