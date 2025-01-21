@@ -17,7 +17,7 @@ const showLog = (req: any, res: any, next: any) => {
   next();
 };
 
-router.post("/", showLog, verifyToken, createVolunteer);
+router.post("/", showLog, createVolunteer);
 router.get("/", showLog, getVolunteers);
 router.get("/:id", showLog, getVolunteerById);
 router.put("/:id", showLog, verifyToken, updateVolunteer);
